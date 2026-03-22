@@ -1,5 +1,6 @@
 Day 1 - ACM POTD
 Problem - Remove duplicates from a sorted array and return number of unique elements.
+
 Approach - Since the array is sorted, duplicates are adjacent. I used two pointers. One pointer keeps track of unique elements and the other scans the array. When a new element is found, it is placed at the next position.
 
 SS of  Code and Output
