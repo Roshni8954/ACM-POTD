@@ -1,4 +1,4 @@
-# Day X - ACM POTD
+# Day 9 - ACM POTD
 # Linked List Cycle (LeetCode 141)
 
 ## Problem
