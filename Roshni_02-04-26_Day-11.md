@@ -36,42 +36,33 @@ We use a two-pointer approach to merge both sorted linked lists. At each step, w
 
 ### Code (Java)
 ```java
-class ListNode {
-    int val;
-    ListNode next;
-    ListNode(int val) {
-        this.val = val;
-        this.next = null;
-    }
-}
-
-public class Solution {
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        // Step 1: Create dummy node
-        ListNode dummy = new ListNode(-1);
-        ListNode current = dummy;
+        ListNode result = new ListNode(-1);
+        ListNode current = result;
 
-        // Step 2: Traverse both lists
-        while (list1 != null && list2 != null) {
-            if (list1.val <= list2.val) {
-                current.next = list1;
+        while(list1 != null && list2 != null){
+            if(list1.val <= list2.val){
+                current.next =list1;
                 list1 = list1.next;
-            } else {
+            }else{
                 current.next = list2;
                 list2 = list2.next;
             }
             current = current.next;
-        }
-
-        // Step 3: Attach remaining nodes
-        if (list1 != null) {
-            current.next = list1;
-        } else {
-            current.next = list2;
-        }
-
-        // Step 4: Return merged list
-        return dummy.next;
+        } 
+        current.next = (list1 != null)? list1:list2;
+        return result.next;
     }
 }
 ```
