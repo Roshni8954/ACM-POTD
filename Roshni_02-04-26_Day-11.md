@@ -74,3 +74,10 @@ public class Solution {
         return dummy.next;
     }
 }
+```
+
+## Complexity Analysis
+Time Complexity: O(n + m)
+→ We traverse both linked lists once, where n and m are their lengths
+Space Complexity: O(1)
+→ No extra space used (in-place merging, only pointers used)
