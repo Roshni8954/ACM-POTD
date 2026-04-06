@@ -5,30 +5,27 @@
 Implement a FIFO (First In First Out) queue using only two stacks.
 
 ### Intuition
-Instead of delaying reversal during pop, we **reverse during push** so that the front element is always on top of `stack2`.
-
+Instead of reversing during push, we reverse **only when needed (lazy transfer)**.
 
 ### Core Logic
-* `stack1` → temporary stack
-* `stack2` → main queue stack (top = front)
-* During push → rearrange elements so order is maintained
+* `stack1` → for push operations
+* `stack2` → for pop/peek operations
+* Transfer happens **only when stack2 is empty**
 
 ### Why This Works
-By reversing twice during push, we maintain correct queue order in `stack2`.
+Elements are reversed only when required, giving efficient amortized performance.
 
 ### Approach
-1. Move all elements from `stack2` → `stack1`
-2. Push new element into `stack1`
-3. Move everything back to `stack2`
-4. Now top of `stack2` = front of queue
+1. Push → always into `stack1`
+2. For peek/pop →
 
+   * If `stack2` empty → move all elements from `stack1` to `stack2`
+3. Perform operation on `stack2`
 
 ### Interview Answer
-We maintain queue order in a single stack by reversing elements during push using a helper stack. This ensures O(1) pop and peek.
-
+Use two stacks where one handles input and the other handles output. Transfer elements only when needed to simulate queue behavior efficiently.
 
 ### Code (Java)
-
 ```java
 class MyQueue {
     Stack<Integer> stack1, stack2;
@@ -38,25 +35,24 @@ class MyQueue {
     }
     
     public void push(int x) {
-        while(!stack2.isEmpty()){
-            stack1.push(stack2.pop());
-        }
         stack1.push(x);
-        while(!stack1.isEmpty()){
-            stack2.push(stack1.pop());
-        }
     }
     
     public int pop() {
+        peek();
         return stack2.pop();
     }
     
     public int peek() {
+        if(stack2.isEmpty()){
+            while(!stack1.isEmpty())
+            stack2.push(stack1.pop());
+        }
         return stack2.peek();
     }
     
     public boolean empty() {
-        return stack2.isEmpty();
+        return stack2.isEmpty() && stack1.isEmpty();
     }
 }
 
@@ -71,63 +67,57 @@ class MyQueue {
 ```
 
 ### Line-by-Line Explanation
-
 #### Initialization
 * `Stack<Integer> stack1, stack2;` → Two stacks
-* `stack1` → helper
-* `stack2` → main queue
+* `stack1` → push stack
+* `stack2` → pop/peek stack
 
 #### Constructor
 * Initialize both stacks
 
 #### Push Operation
-* `while (!stack2.isEmpty())` → Move all elements to stack1
-* `stack1.push(stack2.pop())` → reverse order
-* `stack1.push(x)` → insert new element
-* Move everything back to stack2 → restore order
-
- Now **top of stack2 = front element**
+* `stack1.push(x);`
+  👉 Simply add element (no reversal here)
 
 #### Pop Operation
-
-* `return stack2.pop();`
-   Directly remove front
+* `peek();` → ensures correct order in stack2
+* `return stack2.pop();` → removes front element
 
 #### Peek Operation
-* `return stack2.peek();`
-  Get front element
+* `if(stack2.isEmpty())` → check if transfer needed
+* Move all elements from stack1 → stack2
+  👉 This reverses order
+* `return stack2.peek();` → front element
 
 #### Empty Check
-* `return stack2.isEmpty();`
+* `return stack2.isEmpty() && stack1.isEmpty();`
+  👉 Queue empty only if both stacks empty
 
 ### Complexity Analysis
 * Time Complexity:
 
-  * Push → O(n)
-  * Pop → O(1)
-  * Peek → O(1)
+  * Push → O(1)
+  * Pop → O(1) amortized
+  * Peek → O(1) amortized
 * Space Complexity: O(n)
 
 ### Dry Run
-Push: 1
-stack2 → [1]
+Push: 1, 2, 3
 
-Push: 2
-stack2 → [1,2]
+stack1 → [1,2,3]
+stack2 → []
 
-Push: 3
-stack2 → [1,2,3]
+Peek → transfer happens
+stack2 → [3,2,1]
 
 Pop → 1 ✔
-Peek → 2 ✔
 
 ### Edge Cases
 * Pop on empty queue
 * Single element
-* Multiple push before pop
+* Multiple pushes before pop
 
 ### Key Takeaways
-* Two ways to solve this problem
-* This approach: **costly push, fast pop**
-* Maintains queue order at all times
-* Good for understanding stack reversal
+* Lazy transfer improves efficiency
+* Amortized O(1) solution
+* Most optimal approach for this problem
