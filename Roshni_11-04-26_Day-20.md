@@ -1,5 +1,4 @@
-### Day 200 – ACM POTD
-
+### Day 20 – ACM POTD
 **LeetCode Problem 1544: Make The String Great**
 
 ---
